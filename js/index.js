@@ -9,13 +9,17 @@ var rr = L.Routing.control({
         L.latLng(40.7590615,-73.969231)
     ],
     routeWhileDragging: false,
-    router: L.Routing.valhalla('valhalla-T_YY31g','pedestrian')
+    router: L.Routing.valhalla('valhalla-T_YY31g','auto')
 
 }).addTo(map);
 
+var driveBtn = document.getElementById("drive_btn");
 var bikeBtn = document.getElementById("bike_btn");
 var walkBtn = document.getElementById("walk_btn");
 
+driveBtn.addEventListener('click', function (e) {
+  rr.route({transitmode: 'auto'});
+});
 
 bikeBtn.addEventListener('click', function (e) {
   rr.route({transitmode: 'bicycle'});

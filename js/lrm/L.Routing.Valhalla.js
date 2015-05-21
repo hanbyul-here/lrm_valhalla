@@ -212,6 +212,7 @@ if (typeof module !== undefined) module.exports = polyline;
     },
 
     route: function(waypoints, callback, context, options) {
+
       var timedOut = false,
         wps = [],
         url,
@@ -344,6 +345,7 @@ if (typeof module !== undefined) module.exports = polyline;
       var locs = [],
           locationKey,
           hint;
+      var transitM = options.transitmode || this._transitmode;
 
        for (var i = 0; i < waypoints.length; i++) {
          locationKey = this._locationKey(waypoints[i].latLng);
@@ -351,7 +353,7 @@ if (typeof module !== undefined) module.exports = polyline;
        }
 
       return this.options.serviceUrl + 'viaroute?' +
-                                'costing=' + this._transitmode +
+                                'costing=' + transitM + 
         '&instructions=true&' +
         locs.join('&') +
         (this._hints.checksum !== undefined ? '&checksum=' + this._hints.checksum : '') + 

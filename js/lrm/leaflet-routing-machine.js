@@ -633,7 +633,6 @@ if (typeof module !== undefined) module.exports = polyline;
 				wps = options && options.waypoints || this._plan.getWaypoints();
 				this.fire('routingstart', {waypoints: wps});
 				this._router.route(wps, options.callback || function(err, routes) {
-          console.log(routes);
 					// Prevent race among multiple requests,
 					// by checking the current request's timestamp
 					// against the last request's; ignore result if
@@ -800,8 +799,6 @@ if (typeof module !== undefined) module.exports = polyline;
 		},
 
 		_getInstructionTemplate: function(instr, i) {
-      console.log("asdfadsf");
-      console.log(instr);
 			var type = instr.type === 'Straight' ? (i === 0 ? 'Head' : 'Continue') : instr.type,
 				strings = L.Routing.Localization[this.options.language].instructions[type];
 
@@ -848,7 +845,6 @@ if (typeof module !== undefined) module.exports = polyline;
 
 		initialize: function(options) {
 			L.setOptions(this, options);
-      console.log("options!");
 			this._formatter = this.options.formatter || new L.Routing.Formatter(this.options);
 			this._itineraryBuilder = this.options.itineraryBuilder || new L.Routing.ItineraryBuilder({
 				containerClassName: this.options.itineraryClassName
@@ -892,16 +888,12 @@ if (typeof module !== undefined) module.exports = polyline;
 			var i,
 			    alt,
 			    altDiv;
-          console.log("setalt");
-          console.log(routes);
 			this._clearAlts();
 
 			this._routes = routes;
 
 			for (i = 0; i < this._routes.length; i++) {
 				alt = this._routes[i];
-        console.log("adsfa");
-        console.log(alt);
 				altDiv = this._createAlternative(alt, i);
 				this._altContainer.appendChild(altDiv);
 				this._altElements.push(altDiv);
@@ -926,7 +918,7 @@ if (typeof module !== undefined) module.exports = polyline;
 		},
 
 		_createAlternative: function(alt, i) {
-      console.log(alt);
+
 			var altDiv = L.DomUtil.create('div', 'leaflet-routing-alt ' +
 				this.options.alternativeClassName +
 				(i > 0 ? ' leaflet-routing-alt-minimized ' + this.options.minimizedClassName : '')),
@@ -964,8 +956,6 @@ if (typeof module !== undefined) module.exports = polyline;
 			    icon;
 
 			container.appendChild(steps);
-      console.log(r);
-
 			for (i = 0; i < r.instructions.length; i++) {
 				instr = r.instructions[i];
 				text = instr["instruction"];

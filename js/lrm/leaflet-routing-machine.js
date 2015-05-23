@@ -972,7 +972,7 @@ if (typeof module !== undefined) module.exports = polyline;
 				distance = instr["length"];
 				icon = this._formatter.getIconName(instr, i);
 				step = this._itineraryBuilder.createStep(text, distance, icon, steps);
-				this._addRowListeners(step, r.coordinates[instr.index]);
+				this._addRowListeners(step, r.coordinates[instr.begin_shape_index]);
 			}
 			return container;
 		},

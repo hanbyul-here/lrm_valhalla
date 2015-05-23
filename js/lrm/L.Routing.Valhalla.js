@@ -212,7 +212,7 @@ if (typeof module !== undefined) module.exports = polyline;
     },
 
     route: function(waypoints, callback, context, options) {
-
+    console.log("not original route");
       var timedOut = false,
         wps = [],
         url,
@@ -243,6 +243,7 @@ if (typeof module !== undefined) module.exports = polyline;
         });
       }
 
+
       corslite(url, L.bind(function(err, resp) {
         var data;
 
@@ -270,34 +271,41 @@ if (typeof module !== undefined) module.exports = polyline;
           i;
 
       context = context || callback;
-      if (response.status !== 0) {
+      if (response.trip.status !== 0) {
         callback.call(context, {
           status: response.status,
           message: response.status_message
         });
         return;
       }
+      var insts = [];
+      for(var i = 0; i<response.trip.legs[0].maneuvers.length; i++){
+        insts.push(response.trip.legs[0].maneuvers[i]);
+      }
 
-      coordinates = polyline.decode(response.route_geometry, 6);
-      actualWaypoints = this._toWaypoints(inputWaypoints, response.via_points);
+      coordinates = polyline.decode(response.trip.legs[0].shape, 6);
+      actualWaypoints = this._toWaypoints(inputWaypoints, response.trip.locations);
       alts = [{
-        name: response.route_name.join(', '),
+        ////gotta change
+        name: response.trip.units,
         coordinates: coordinates,
-        instructions: response.route_instructions ? this._convertInstructions(response.route_instructions) : [],
-        summary: response.route_summary ? this._convertSummary(response.route_summary) : [],
+        instructions: insts,//response.route_instructions ? this._convertInstructions(response.route_instructions) : [],
+        summary: response.trip.summary ? this._convertSummary(response.trip.summary) : [],
         inputWaypoints: inputWaypoints,
         waypoints: actualWaypoints,
-        waypointIndices: this._clampIndices(response.via_indices, coordinates)
+        waypointIndices: this._clampIndices([0,response.trip.legs[0].maneuvers.length], coordinates)
       }];
 
-      if (response.alternative_geometries) {
-        for (i = 0; i < response.alternative_geometries.length; i++) {
-          coordinates = polyline.decode(response.alternative_geometries[i], 6);
+
+/*
+      if (response.trip.legs[0].shape) {
+        for (i = 0; i < response.trip.legs[0].maneuvers; i++) {
+          coordinates = polyline.decode(response.trip.legs[0].shape, 6);
           alts.push({
-            name: response.alternative_names[i].join(', '),
+            name: 'km'
             coordinates: coordinates,
-            instructions: response.alternative_instructions[i] ? this._convertInstructions(response.alternative_instructions[i]) : [],
-            summary: response.alternative_summaries[i] ? this._convertSummary(response.alternative_summaries[i]) : [],
+            instructions: insts[i],//response.alternative_instructions[i] ? this._convertInstructions(response.alternative_instructions[i]) : [],
+            summary: response.alternative_summaries[i] ? this._convertSummary(response.trip.summary) : [],
             inputWaypoints: inputWaypoints,
             waypoints: actualWaypoints,
             waypointIndices: this._clampIndices(response.alternative_geometries.length === 1 ?
@@ -309,7 +317,7 @@ if (typeof module !== undefined) module.exports = polyline;
           });
         }
       }
-
+*/
       // only versions <4.5.0 will support this flag
         if (response.hint_data) {
           this._saveHintData(response.hint_data, inputWaypoints);
@@ -333,7 +341,7 @@ if (typeof module !== undefined) module.exports = polyline;
       var wps = [],
           i;
       for (i = 0; i < vias.length; i++) {
-        wps.push(L.Routing.waypoint(L.latLng(vias[i]),
+        wps.push(L.Routing.waypoint(L.latLng([vias[i]["lat"],vias[i]["lon"]]),
                                     inputWaypoints[i].name,
                                     inputWaypoints[i].options));
       }
@@ -348,16 +356,20 @@ if (typeof module !== undefined) module.exports = polyline;
       var transitM = options.transitmode || this._transitmode;
 
        for (var i = 0; i < waypoints.length; i++) {
-         locationKey = this._locationKey(waypoints[i].latLng);
-         locs.push('loc=' + locationKey);
+         locationKey = this._locationKey(waypoints[i].latLng).split(',');
+         var loc = {
+           lat: parseFloat(locationKey[0]),
+           lon: parseFloat(locationKey[1])
+         }
+         locs.push(loc);
        }
 
-      return this.options.serviceUrl + 'viaroute?' +
-                                'costing=' + transitM + 
-        '&instructions=true&' +
-        locs.join('&') +
-        (this._hints.checksum !== undefined ? '&checksum=' + this._hints.checksum : '') + 
-        '&api_key=' + this._accessToken;
+       var params = JSON.stringify({
+         locations: locs,
+         costing: transitM});
+
+      return this.options.serviceUrl + 'route?json=' +
+              params + '&api_key=' + this._accessToken;
     },
 
     _locationKey: function(location) {

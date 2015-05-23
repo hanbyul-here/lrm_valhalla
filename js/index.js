@@ -1,4 +1,7 @@
-var map = L.map('map');
+var map = L.map('map',{
+  //tangram support
+  inertia: false
+});
 
 var layer = Tangram.leafletLayer({ scene: 'resource/scene.yaml' });
 layer.addTo(map);

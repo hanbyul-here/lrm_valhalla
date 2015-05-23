@@ -282,7 +282,6 @@ if (typeof module !== undefined) module.exports = polyline;
       for(var i = 0; i<response.trip.legs[0].maneuvers.length; i++){
         insts.push(response.trip.legs[0].maneuvers[i]);
       }
-
       coordinates = polyline.decode(response.trip.legs[0].shape, 6);
       actualWaypoints = this._toWaypoints(inputWaypoints, response.trip.locations);
       alts = [{
@@ -378,8 +377,8 @@ if (typeof module !== undefined) module.exports = polyline;
 
     _convertSummary: function(route) {
       return {
-        totalDistance: route.total_distance,
-        totalTime: route.total_time
+        totalDistance: route.length,
+        totalTime: route.time
       };
     },
 

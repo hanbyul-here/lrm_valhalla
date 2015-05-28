@@ -959,13 +959,33 @@ if (typeof module !== undefined) module.exports = polyline;
 			for (i = 0; i < r.instructions.length; i++) {
 				instr = r.instructions[i];
 				text = instr["instruction"];
-				distance = instr["length"];
+				distance = this._getReadableDistance(instr["length"], r.unit);
 				icon = this._formatter.getIconName(instr, i);
 				step = this._itineraryBuilder.createStep(text, distance, icon, steps);
 				this._addRowListeners(step, r.coordinates[instr.begin_shape_index]);
 			}
 			return container;
 		},
+    _getReadableDistance:function(len,unit){
+      var wUnit = unit
+      if(unit === "kilometers"||unit ===  "km"){
+
+        wUnit = " km"
+        if(len < 1){
+          len = len * 1000;
+          wUnit = " m";
+        }else{
+          //rouding
+          len = Math.floor(len *100)/100;
+        }
+      }
+      if(unit === "miles" ||unit ===  "mi"){
+        wUnit = " mi"
+        len = Math.floor(len *100)/100;
+      }
+
+      return len + wUnit;
+    },
 
 		_addRowListeners: function(row, coordinate) {
 			var _this = this,

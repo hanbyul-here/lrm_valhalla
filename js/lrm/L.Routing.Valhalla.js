@@ -197,7 +197,7 @@ if (typeof module !== undefined) module.exports = polyline;
 
   L.Routing.Valhalla = L.Class.extend({
     options: {
-      serviceUrl: '//valhalla.api.dev.mapzen.com/',
+      serviceUrl: '//valhalla.dev.mapzen.com/',
       timeout: 30 * 1000,
       transitmode: 'auto'
     },
@@ -212,7 +212,8 @@ if (typeof module !== undefined) module.exports = polyline;
     },
 
     route: function(waypoints, callback, context, options) {
-    console.log("not original route");
+      console.log(waypoints);
+      console.log(options);
       var timedOut = false,
         wps = [],
         url,
@@ -221,7 +222,10 @@ if (typeof module !== undefined) module.exports = polyline;
         i;
 
       options = options || {};
+      //waypoints = options.waypoints || waypoints;
+      console.log(waypoints);
       url = this.buildRouteUrl(waypoints, options);
+
 
       timer = setTimeout(function() {
                 timedOut = true;
@@ -286,7 +290,9 @@ if (typeof module !== undefined) module.exports = polyline;
       actualWaypoints = this._toWaypoints(inputWaypoints, response.trip.locations);
       alts = [{
         ////gotta change
-        name: response.trip.units,
+        name: this._trimLocationKey(inputWaypoints[0].latLng) + " </div><div class='dest'> " + this._trimLocationKey(inputWaypoints[1].latLng) ,
+        unit: response.trip.units,
+        transitmode: this._transitmode,
         coordinates: coordinates,
         instructions: insts,//response.route_instructions ? this._convertInstructions(response.route_instructions) : [],
         summary: response.trip.summary ? this._convertSummary(response.trip.summary) : [],
@@ -294,7 +300,6 @@ if (typeof module !== undefined) module.exports = polyline;
         waypoints: actualWaypoints,
         waypointIndices: this._clampIndices([0,response.trip.legs[0].maneuvers.length], coordinates)
       }];
-
 
 /*
       if (response.trip.legs[0].shape) {
@@ -373,6 +378,17 @@ if (typeof module !== undefined) module.exports = polyline;
 
     _locationKey: function(location) {
       return location.lat + ',' + location.lng;
+    },
+
+    _trimLocationKey: function(location){
+      var lat = location.lat;
+      var lng = location.lng;
+
+      var nameLat = Math.floor(location.lat * 1000)/1000;
+      var nameLng = Math.floor(location.lng * 1000)/1000;
+
+      return nameLat + ' , ' + nameLng;
+
     },
 
     _convertSummary: function(route) {

@@ -27,8 +27,7 @@ driveBtn.addEventListener('click', function (e) {
     // ]);
     // rr.setWaypoints(newWayPoints);
 
-    rr.setWaypoints([L.Routing.waypoint(L.latLng(40.05323,-75.313632)),L.Routing.waypoint( L.latLng(40.05323,-76.03632))]);
-    rr.route(newWayPoints,{transitmode: 'auto'});
+    rr.route({transitmode: 'auto'});
 });
 
 bikeBtn.addEventListener('click', function (e) {

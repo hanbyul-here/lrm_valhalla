@@ -18,6 +18,7 @@ rr.setWaypoints([L.Routing.waypoint(L.latLng(40.645244,-73.9449975)),L.Routing.w
 var driveBtn = document.getElementById("drive_btn");
 var bikeBtn = document.getElementById("bike_btn");
 var walkBtn = document.getElementById("walk_btn");
+var relocateBtn  = document.getElementById("relocate_btn");
 
 driveBtn.addEventListener('click', function (e) {
 
@@ -33,6 +34,16 @@ driveBtn.addEventListener('click', function (e) {
 bikeBtn.addEventListener('click', function (e) {
   rr.route({transitmode: 'bicycle'});
 });
+
 walkBtn.addEventListener('click', function (e) {
+  rr.route({transitmode: 'pedestrian'});
+});
+
+relocateBtn.addEventListener('click', function (e) {
+  var lat = map.getCenter().lat;
+  var lng = map.getCenter().lng;
+
+  var newWayPoints = [L.Routing.waypoint(L.latLng(lat, lng)),L.Routing.waypoint(L.latLng(lat + 0.001, lng + 0.001))];
+  rr.setWaypoints(newWayPoints);
   rr.route({transitmode: 'pedestrian'});
 });

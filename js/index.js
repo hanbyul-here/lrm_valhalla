@@ -44,7 +44,7 @@ var rr = L.Routing.control({
       },
       pointMarkerStyle: {radius: 6,color: '#25A5FA',fillColor: '#FFDA8A',opacity: 1,fillOpacity: 1}}).addTo(map);
 
-var layer = Tangram.leafletLayer({ scene: 'scene.yaml' });
+var layer = Tangram.leafletLayer({ scene: 'resource/scene.yaml' });
 layer.addTo(map);
 
 if(!hashTransitMode){

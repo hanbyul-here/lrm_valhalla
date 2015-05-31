@@ -435,10 +435,10 @@ if (typeof module !== undefined) module.exports = polyline;
         }
       }
       var suburl = "";
-      for( var j = 4; j< startPoint; j++){
-        if(j === 4) suburl +="/"
+      for( var j = 3; j< startPoint; j++){
+        if(j === 3) suburl +="/"
         suburl += adds[j];
-      }
+        }
       
       window.history.replaceState({}, "Title", suburl+ '/#' + transitM + '/' + startLat + '/' + startLng + '/' + destLat + '/' + destLng);
     },

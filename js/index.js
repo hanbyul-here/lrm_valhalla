@@ -2,12 +2,22 @@ var map = L.map('map',{
   //tangram's inertia doesn't work great with leaflet 0.7
   inertia: false
 });
+var adds = window.location.href.split('/');
+var startPoint;
 
-var hashTransitMode = window.location.href.split('/')[3];
-var startLat = window.location.href.split('/')[4];
-var startLng = window.location.href.split('/')[5];
-var destLat = window.location.href.split('/')[6];
-var destLng = window.location.href.split('/')[7];
+for(var i = 0; i< adds.length; i++){
+  if(adds[i] === 'auto' || adds[i]  === 'bicycle' || adds[i]  === 'pedestrian'){
+    startPoint = i;
+    break;
+  }
+}
+
+
+var hashTransitMode = window.location.href.split('/')[startPoint];
+var startLat = window.location.href.split('/')[startPoint+1];
+var startLng = window.location.href.split('/')[startPoint+2];
+var destLat = window.location.href.split('/')[startPoint+3];
+var destLng = window.location.href.split('/')[startPoint+4];
 
 
 var rr = L.Routing.control({

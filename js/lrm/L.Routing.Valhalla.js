@@ -435,6 +435,7 @@ if (typeof module !== undefined) module.exports = polyline;
         }
       }
       var suburl = "";
+      console.log(adds[3]);
       for( var j = 3; j< startPoint; j++){
         if(j === 3) suburl +="/"
         suburl += adds[j];

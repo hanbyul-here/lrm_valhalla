@@ -27,12 +27,12 @@ var rr = L.Routing.control({
     var iconV;
       if(i ==0){
           iconV = L.icon({
-            iconUrl: 'dot.png',
+            iconUrl: '/dot.png',
             iconSize:[24,24]
           });
         }else{
           iconV = L.icon({
-            iconUrl: 'dot.png',
+            iconUrl: '/dot.png',
             iconSize:[24,24]
           })
         }

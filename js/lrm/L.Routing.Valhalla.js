@@ -427,20 +427,17 @@ if (typeof module !== undefined) module.exports = polyline;
 
       var adds = window.location.href.split('/');
       var startPoint = -1;
+      var suburl = "";
 
-      for(var i = 0; i< adds.length; i++){
+      for(var i = 3; i< adds.length; i++){
         if(adds[i] === '#auto' || adds[i]  === '#bicycle' || adds[i]  === '#pedestrian'){
         startPoint = i;
         break;
+        }else{
+          suburl += adds[i];
         }
       }
-      var suburl = "";
-      console.log(adds[3]);
-      for( var j = 3; j< startPoint; j++){
-        if(j === 3) suburl +="/"
-        suburl += adds[j];
-        }
-      
+
       window.history.replaceState({}, "Title", suburl+ '/#' + transitM + '/' + startLat + '/' + startLng + '/' + destLat + '/' + destLng);
     },
 

@@ -212,8 +212,6 @@ if (typeof module !== undefined) module.exports = polyline;
     },
 
     route: function(waypoints, callback, context, options) {
-      console.log(waypoints);
-      console.log(options);
       var timedOut = false,
         wps = [],
         url,
@@ -223,7 +221,6 @@ if (typeof module !== undefined) module.exports = polyline;
 
       options = options || {};
       //waypoints = options.waypoints || waypoints;
-      console.log(waypoints);
       url = this.buildRouteUrl(waypoints, options);
 
 
@@ -273,7 +270,6 @@ if (typeof module !== undefined) module.exports = polyline;
           alts,
           actualWaypoints,
           i;
-
       context = context || callback;
       if (response.trip.status !== 0) {
         callback.call(context, {
@@ -300,6 +296,7 @@ if (typeof module !== undefined) module.exports = polyline;
         waypoints: actualWaypoints,
         waypointIndices: this._clampIndices([0,response.trip.legs[0].maneuvers.length], coordinates)
       }];
+      this._changeURL(this._transitmode, inputWaypoints[0].latLng.lat, inputWaypoints[0].latLng.lng, inputWaypoints[1].latLng.lat, inputWaypoints[1].latLng.lng);
 
 /*
       if (response.trip.legs[0].shape) {
@@ -358,6 +355,7 @@ if (typeof module !== undefined) module.exports = polyline;
           locationKey,
           hint;
       var transitM = options.transitmode || this._transitmode;
+      this._transitmode = transitM;
 
        for (var i = 0; i < waypoints.length; i++) {
          locationKey = this._locationKey(waypoints[i].latLng).split(',');
@@ -425,6 +423,9 @@ if (typeof module !== undefined) module.exports = polyline;
       return result;
     },
 
+    _changeURL: function(transitM,startLat,startLng,destLat,destLng){
+      window.history.replaceState({}, "Title", '/#' + transitM + '/' + startLat + '/' + startLng + '/' + destLat + '/' + destLng);
+    },
 
     _drivingDirectionType: function(d) {
       switch (parseInt(d, 10)) {

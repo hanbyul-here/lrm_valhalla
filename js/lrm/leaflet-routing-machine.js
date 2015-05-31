@@ -622,7 +622,6 @@ if (typeof module !== undefined) module.exports = polyline;
 		route: function(options) {
 			var ts = ++this._requestCount,
 				wps;
-       console.log("original route");
 			options = options || {};
 
 			if (this._plan.isReady()) {
@@ -1114,9 +1113,9 @@ if (typeof module !== undefined) module.exports = polyline;
 
 		options: {
 			styles: [
-				{color: 'black', opacity: 0.15, weight: 9},
-				{color: 'white', opacity: 0.8, weight: 6},
-				{color: 'red', opacity: 1, weight: 2}
+        {color: 'black', opacity: 0.0, weight: 0},
+        {color: '#263A42', opacity: 0.8, weight:6},
+        {color: '#25A5FA', opacity: 0.86400, weight: 6}
 			],
 			missingRouteStyles: [
 				{color: 'black', opacity: 0.15, weight: 7},

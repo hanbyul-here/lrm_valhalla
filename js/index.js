@@ -1,49 +1,93 @@
 var map = L.map('map',{
-  //tangram support
+  //tangram's inertia doesn't work great with leaflet 0.7
   inertia: false
 });
+
+var hashTransitMode = window.location.href.split('/')[3];
+var startLat = window.location.href.split('/')[4];
+var startLng = window.location.href.split('/')[5];
+var destLat = window.location.href.split('/')[6];
+var destLng = window.location.href.split('/')[7];
+
+
+var rr = L.Routing.control({
+  routeWhileDragging: false,
+  router: L.Routing.valhalla('valhalla-T_YY31g','auto'),
+  summaryTemplate:'<div class="start">{name}</div><div class="info {transitmode}">{distance}, {time}</div>',
+  createMarker: function(i,wp,n){
+    var iconV;
+      if(i ==0){
+          iconV = L.icon({
+            iconUrl: '/images/dot.png',
+            iconSize:[24,24]
+          });
+        }else{
+          iconV = L.icon({
+            iconUrl: '/images/dot.png',
+            iconSize:[24,24]
+          })
+        }
+        var options = {
+          draggable: true,
+          icon: iconV
+        }
+        return L.marker(wp.latLng,options);
+      },
+      pointMarkerStyle: {radius: 6,color: '#25A5FA',fillColor: '#FFDA8A',opacity: 1,fillOpacity: 1}}).addTo(map);
 
 var layer = Tangram.leafletLayer({ scene: 'resource/scene.yaml' });
 layer.addTo(map);
 
-var rr = L.Routing.control({
-    routeWhileDragging: false,
-    router: L.Routing.valhalla('valhalla-T_YY31g','auto'),
-    summaryTemplate:'<div class="start">{name}</div><div class="info {transitmode}">{distance}, {time}</div>'
+if(!hashTransitMode){
 
-}).addTo(map);
+  hashTransitMode = 'auto';
+  startLat = 40.645244;
+  startLng = -73.9449975;
+  destLat = 40.7590615;
+  destLng = -73.969231;
 
+}else{
+  hashTransitMode = hashTransitMode.replace("#","");
+}
 
-rr.setWaypoints([L.Routing.waypoint(L.latLng(40.645244,-73.9449975)),L.Routing.waypoint( L.latLng(40.7590615,-73.969231))]);
+rr.setWaypoints([L.Routing.waypoint(L.latLng(startLat,startLng)),L.Routing.waypoint( L.latLng(destLat,destLng))]);
+rr.route({transitmode: hashTransitMode});
+
 var driveBtn = document.getElementById("drive_btn");
 var bikeBtn = document.getElementById("bike_btn");
 var walkBtn = document.getElementById("walk_btn");
 var relocateBtn  = document.getElementById("relocate_btn");
 
 driveBtn.addEventListener('click', function (e) {
-
-    // var newWayPoints = new L.Routing.Waypoint([
-    //     L.latLng(39.645244,-73.9449975),
-    //     L.latLng(39.7590615,-73.969231)
-    // ]);
-    // rr.setWaypoints(newWayPoints);
-
-    rr.route({transitmode: 'auto'});
+  hashTransitMode = 'auto';
+  rr.route({transitmode: hashTransitMode});
 });
 
 bikeBtn.addEventListener('click', function (e) {
-  rr.route({transitmode: 'bicycle'});
+  hashTransitMode = 'bicycle';
+  rr.route({transitmode: hashTransitMode});
 });
 
 walkBtn.addEventListener('click', function (e) {
-  rr.route({transitmode: 'pedestrian'});
+  hashTransitMode = 'pedestrian';
+  rr.route({transitmode: hashTransitMode});
 });
 
 relocateBtn.addEventListener('click', function (e) {
-  var lat = map.getCenter().lat;
-  var lng = map.getCenter().lng;
+  startLat = map.getCenter().lat;
+  startLng = map.getCenter().lng;
 
-  var newWayPoints = [L.Routing.waypoint(L.latLng(lat, lng)),L.Routing.waypoint(L.latLng(lat + 0.001, lng + 0.001))];
+  destLat = startLat + 0.001;
+  destLng = startLng + 0.001;
+  
+  var newWayPoints = [L.Routing.waypoint(L.latLng(startLat, startLng)),L.Routing.waypoint(L.latLng(destLat, destLng))];
   rr.setWaypoints(newWayPoints);
-  rr.route({transitmode: 'pedestrian'});
+  rr.route();
+
 });
+
+
+function changeURL(transitM,startLat,startLng,destLat,destLng){
+
+  window.history.replaceState({}, "Title", '/#' + transitM + '/' + startLat + '/' + startLng + '/' + destLat + '/' + destLng);
+}

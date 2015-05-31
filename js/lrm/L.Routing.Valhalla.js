@@ -424,21 +424,7 @@ if (typeof module !== undefined) module.exports = polyline;
     },
 
     _changeURL: function(transitM,startLat,startLng,destLat,destLng){
-
-      var adds = window.location.href.split('/');
-      var startPoint = -1;
-      var suburl = "";
-
-      for(var i = 3; i< adds.length; i++){
-        if(adds[i] === '#auto' || adds[i]  === '#bicycle' || adds[i]  === '#pedestrian'){
-        startPoint = i;
-        break;
-        }else{
-          suburl += adds[i];
-        }
-      }
-
-      window.history.replaceState({}, "Title", suburl+ '/#' + transitM + '/' + startLat + '/' + startLng + '/' + destLat + '/' + destLng);
+      window.location.hash = transitM + '/' + startLat + '/' + startLng + '/' + destLat + '/' + destLng;
     },
 
     _drivingDirectionType: function(d) {

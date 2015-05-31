@@ -2,21 +2,16 @@ var map = L.map('map',{
   //tangram's inertia doesn't work great with leaflet 0.7
   inertia: false
 });
-var adds = window.location.href.split('/');
-var startPoint;
 
-for(var i = 0; i< adds.length; i++){
-  if(adds[i] === '#auto' || adds[i]  === '#bicycle' || adds[i]  === '#pedestrian'){
-    startPoint = i;
-    break;
-  }
-}
+var hash = window.location.hash ;
 
-var hashTransitMode = adds[startPoint];
-var startLat = adds[startPoint+1];
-var startLng = adds[startPoint+2];
-var destLat = adds[startPoint+3];
-var destLng = adds[startPoint+4];
+var hashes = hash.split('/')
+
+var hashTransitMode = hashes[0];
+var startLat = hashes[1];
+var startLng = hashes[2];
+var destLat = hashes[3];
+var destLng = hashes[4];
 
 
 var rr = L.Routing.control({
@@ -27,12 +22,12 @@ var rr = L.Routing.control({
     var iconV;
       if(i ==0){
           iconV = L.icon({
-            iconUrl: '/dot.png',
+            iconUrl: 'resource/dot.png',
             iconSize:[24,24]
           });
         }else{
           iconV = L.icon({
-            iconUrl: '/dot.png',
+            iconUrl: 'resource/dot.png',
             iconSize:[24,24]
           })
         }

@@ -28,12 +28,12 @@ var rr = L.Routing.control({
     var iconV;
       if(i ==0){
           iconV = L.icon({
-            iconUrl: '/images/dot.png',
+            iconUrl: './images/dot.png',
             iconSize:[24,24]
           });
         }else{
           iconV = L.icon({
-            iconUrl: '/images/dot.png',
+            iconUrl: './images/dot.png',
             iconSize:[24,24]
           })
         }
@@ -45,7 +45,7 @@ var rr = L.Routing.control({
       },
       pointMarkerStyle: {radius: 6,color: '#25A5FA',fillColor: '#FFDA8A',opacity: 1,fillOpacity: 1}}).addTo(map);
 
-var layer = Tangram.leafletLayer({ scene: '/resource/scene.yaml' });
+var layer = Tangram.leafletLayer({ scene: './resource/scene.yaml' });
 layer.addTo(map);
 
 if(!hashTransitMode){

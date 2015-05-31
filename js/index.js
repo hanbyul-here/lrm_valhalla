@@ -6,18 +6,17 @@ var adds = window.location.href.split('/');
 var startPoint;
 
 for(var i = 0; i< adds.length; i++){
-  if(adds[i] === 'auto' || adds[i]  === 'bicycle' || adds[i]  === 'pedestrian'){
+  if(adds[i] === '#auto' || adds[i]  === '#bicycle' || adds[i]  === '#pedestrian'){
     startPoint = i;
     break;
   }
 }
 
-
-var hashTransitMode = window.location.href.split('/')[startPoint];
-var startLat = window.location.href.split('/')[startPoint+1];
-var startLng = window.location.href.split('/')[startPoint+2];
-var destLat = window.location.href.split('/')[startPoint+3];
-var destLng = window.location.href.split('/')[startPoint+4];
+var hashTransitMode = adds[startPoint];
+var startLat = adds[startPoint+1];
+var startLng = adds[startPoint+2];
+var destLat = adds[startPoint+3];
+var destLng = adds[startPoint+4];
 
 
 var rr = L.Routing.control({
@@ -28,12 +27,12 @@ var rr = L.Routing.control({
     var iconV;
       if(i ==0){
           iconV = L.icon({
-            iconUrl: './images/dot.png',
+            iconUrl: 'dot.png',
             iconSize:[24,24]
           });
         }else{
           iconV = L.icon({
-            iconUrl: './images/dot.png',
+            iconUrl: 'dot.png',
             iconSize:[24,24]
           })
         }
@@ -45,7 +44,7 @@ var rr = L.Routing.control({
       },
       pointMarkerStyle: {radius: 6,color: '#25A5FA',fillColor: '#FFDA8A',opacity: 1,fillOpacity: 1}}).addTo(map);
 
-var layer = Tangram.leafletLayer({ scene: './resource/scene.yaml' });
+var layer = Tangram.leafletLayer({ scene: 'scene.yaml' });
 layer.addTo(map);
 
 if(!hashTransitMode){

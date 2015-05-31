@@ -424,7 +424,23 @@ if (typeof module !== undefined) module.exports = polyline;
     },
 
     _changeURL: function(transitM,startLat,startLng,destLat,destLng){
-      window.history.replaceState({}, "Title", '/#' + transitM + '/' + startLat + '/' + startLng + '/' + destLat + '/' + destLng);
+
+      var adds = window.location.href.split('/');
+      var startPoint = -1;
+
+      for(var i = 0; i< adds.length; i++){
+        if(adds[i] === '#auto' || adds[i]  === '#bicycle' || adds[i]  === '#pedestrian'){
+        startPoint = i;
+        break;
+        }
+      }
+      var suburl = "";
+      for( var j = 4; j< startPoint; j++){
+        if(j === 4) suburl +="/"
+        suburl += adds[j];
+      }
+      
+      window.history.replaceState({}, "Title", suburl+ '/#' + transitM + '/' + startLat + '/' + startLng + '/' + destLat + '/' + destLng);
     },
 
     _drivingDirectionType: function(d) {

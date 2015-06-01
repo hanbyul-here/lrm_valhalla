@@ -16,7 +16,7 @@ var destLng = hashes[4];
 
 var rr = L.Routing.control({
   routeWhileDragging: false,
-  router: L.Routing.valhalla('valhalla-T_YY31g','auto'),
+  router: L.Routing.valhalla('valhalla-Mc6zgDA','auto'),
   summaryTemplate:'<div class="start">{name}</div><div class="info {transitmode}">{distance}, {time}</div>',
   createMarker: function(i,wp,n){
     var iconV;
@@ -61,6 +61,29 @@ var driveBtn = document.getElementById("drive_btn");
 var bikeBtn = document.getElementById("bike_btn");
 var walkBtn = document.getElementById("walk_btn");
 var relocateBtn  = document.getElementById("relocate_btn");
+
+var mobileRouteEL = document.createElement('div');
+
+mobileRouteEL.className = 'mobile-route';
+mobileRouteEL.classList.add('show-route');
+mobileRouteEL.addEventListener('click', function (e) {
+
+var routingContainer = document.getElementsByClassName('leaflet-routing-container')[0];
+      if(routingContainer.classList.contains('left-align')){
+        routingContainer.classList.remove('left-align');
+        mobileRouteEL.classList.add('show-route');
+        mobileRouteEL.classList.remove('hide-route');
+      }else{
+        routingContainer.classList.add('left-align');
+        mobileRouteEL.classList.remove('show-route');
+        mobileRouteEL.classList.add('hide-route');
+      }
+    });
+
+document.body.appendChild(mobileRouteEL);
+
+
+
 
 driveBtn.addEventListener('click', function (e) {
   hashTransitMode = 'auto';

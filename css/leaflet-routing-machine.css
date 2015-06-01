@@ -64,7 +64,7 @@
       min-height: 40px;
       line-height: 40px;
       padding-left: 40px;
-      background-image: url('/resource/dot.png');
+      background-image: url('../resource/dot.png');
       background-repeat: no-repeat;
       background-position: 5px 8px;
       letter-spacing: 0.5px;
@@ -75,7 +75,7 @@
       line-height:40px;
       min-height:40px;
       padding-left:40px;
-      background-image: url('/resource/pin.png');
+      background-image: url('../resource/pin.png');
       background-repeat: no-repeat;
       background-position: 5px 8px;
       letter-spacing: 0.5px;
@@ -95,13 +95,13 @@
     }
 
     .leaflet-routing-container .info.auto{
-      background-image: url('/resource/drive.png');
+      background-image: url('../resource/drive.png');
     }
     .leaflet-routing-container .info.bicycle{
-      background-image: url('/resource/bike.png');
+      background-image: url('../resource/bike.png');
     }
     .leaflet-routing-container .info.pedestrian{
-      background-image: url('/resource/walk.png');
+      background-image: url('../resource/walk.png');
     }
 
     .leaflet-routing-alt{
@@ -255,7 +255,7 @@
         cursor:pointer;
         z-index:1030;
       }
-      .show-route{ background-image: url("/resource/show.png");}
-      .hide-route{ background-image: url("/resource/hide.png");}
+      .show-route{ background-image: url("../resource/show.png");}
+      .hide-route{ background-image: url("../resource/hide.png");}
 
     }

@@ -45,6 +45,7 @@ var rr = L.Routing.control({
         }
         return L.marker(wp.latLng,options);
       },
+      formatter: new L.Routing.Valhalla.Formatter(),
       pointMarkerStyle: {radius: 6,color: '#25A5FA',fillColor: '#FFDA8A',opacity: 1,fillOpacity: 1}}).addTo(map);
 
 

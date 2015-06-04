@@ -278,6 +278,7 @@ if (typeof module !== undefined) module.exports = polyline;
         });
         return;
       }
+
 //if valhalla changes to array of objects
 
       var insts = [];
@@ -298,12 +299,12 @@ if (typeof module !== undefined) module.exports = polyline;
         }
 
         shapeIndex += response.trip.legs[i].maneuvers[response.trip.legs[i].maneuvers.length-1]["begin_shape_index"];
-        console.log(shapeIndex);
       }
       //coordinates = polyline.decode(response.trip.legs[0].shape, 6);
       //console.log(coordinates);
-
       actualWaypoints = this._toWaypoints(inputWaypoints, response.trip.locations);
+
+
       alts = [{
         ////gotta change
         name: this._trimLocationKey(inputWaypoints[0].latLng) + " </div><div class='dest'> " + this._trimLocationKey(inputWaypoints[1].latLng) ,
@@ -316,7 +317,7 @@ if (typeof module !== undefined) module.exports = polyline;
         waypoints: actualWaypoints,
         waypointIndices: this._clampIndices([0,response.trip.legs[0].maneuvers.length], coordinates)
       }];
-      this._changeURL(this._transitmode, inputWaypoints[0].latLng.lat, inputWaypoints[0].latLng.lng, inputWaypoints[1].latLng.lat, inputWaypoints[1].latLng.lng);
+ //     this._changeURL(this._transitmode, inputWaypoints[0].latLng.lat, inputWaypoints[0].latLng.lng, inputWaypoints[1].latLng.lat, inputWaypoints[1].latLng.lng);
 
 /*
       if (response.trip.legs[0].shape) {
@@ -363,7 +364,7 @@ if (typeof module !== undefined) module.exports = polyline;
           i;
       for (i = 0; i < vias.length; i++) {
         wps.push(L.Routing.waypoint(L.latLng([vias[i]["lat"],vias[i]["lon"]]),
-                                    "",
+                                    "name",
                                     {}));
       }
 
@@ -375,20 +376,33 @@ if (typeof module !== undefined) module.exports = polyline;
           locationKey,
           hint;
       var transitM = options.transitmode || this._transitmode;
+      var streetName = options.street;
       this._transitmode = transitM;
 
-       for (var i = 0; i < waypoints.length; i++) {
-         locationKey = this._locationKey(waypoints[i].latLng).split(',');
-         var loc = {
-           lat: parseFloat(locationKey[0]),
-           lon: parseFloat(locationKey[1])
-         }
-         locs.push(loc);
-       }
+      for (var i = 0; i < waypoints.length; i++) {
+        var loc;
+        locationKey = this._locationKey(waypoints[i].latLng).split(',');
+        if(i === 0 || i === waypoints.length-1){
+          loc = {
+            lat: parseFloat(locationKey[0]),
+            lon: parseFloat(locationKey[1]),
+            type: "break"
+          }
+        }else{
+          loc = {
+            lat: parseFloat(locationKey[0]),
+            lon: parseFloat(locationKey[1]),
+            type: "through"
+          }
+        }
+        locs.push(loc);
+      }
 
        var params = JSON.stringify({
          locations: locs,
-         costing: transitM});
+         costing: transitM,
+         street: streetName
+       });
 
       return this.options.serviceUrl + 'route?json=' +
               params + '&api_key=' + this._accessToken;
@@ -441,44 +455,6 @@ if (typeof module !== undefined) module.exports = polyline;
       }
 
       return result;
-    },
-
-    _changeURL: function(transitM,startLat,startLng,destLat,destLng){
-      window.location.hash = transitM + '/' + startLat + '/' + startLng + '/' + destLat + '/' + destLng;
-    },
-
-    _drivingDirectionType: function(d) {
-      switch (parseInt(d, 10)) {
-      case 1:
-        return 'Straight';
-      case 2:
-        return 'SlightRight';
-      case 3:
-        return 'Right';
-      case 4:
-        return 'SharpRight';
-      case 5:
-        return 'TurnAround';
-      case 6:
-        return 'SharpLeft';
-      case 7:
-        return 'Left';
-      case 8:
-        return 'SlightLeft';
-      case 9:
-        return 'WaypointReached';
-      case 10:
-        // TODO: "Head on"
-        // https://github.com/DennisOSRM/Project-OSRM/blob/master/DataStructures/TurnInstructions.h#L48
-        return 'Straight';
-      case 11:
-      case 12:
-        return 'Roundabout';
-      case 15:
-        return 'DestinationReached';
-      default:
-        return null;
-      }
     },
 
     _clampIndices: function(indices, coords) {

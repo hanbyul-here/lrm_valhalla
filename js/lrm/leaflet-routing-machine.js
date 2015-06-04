@@ -495,10 +495,7 @@ if (typeof module !== undefined) module.exports = polyline;
       this._updateLine(route);
 
       if (fitBounds) {
-        this._map.fitBounds(this._line.getBounds(),{
-          paddingTopLeft:[30,100],
-          paddingBottomRight:[200,30],
-        });
+        this._map.fitBounds(this._line.getBounds());
       }
 
       if (this.options.waypointMode === 'snap') {
@@ -625,6 +622,7 @@ if (typeof module !== undefined) module.exports = polyline;
     route: function(options) {
       var ts = ++this._requestCount,
         wps;
+
       options = options || {};
 
       if (this._plan.isReady()) {
@@ -760,9 +758,8 @@ if (typeof module !== undefined) module.exports = polyline;
     },
 
     formatInstruction: function(instr, i) {
-
       if (instr.text === undefined) {
-        return L.Util.template(/*this._getInstructionTemplate(instr, i)*/instr,
+        return L.Util.template(this._getInstructionTemplate(instr, i),
           L.extend({
             exitStr: instr.exit ? L.Routing.Localization[this.options.language].formatOrder(instr.exit) : '',
             dir: L.Routing.Localization[this.options.language].directions[instr.direction]
@@ -890,6 +887,7 @@ if (typeof module !== undefined) module.exports = polyline;
       var i,
           alt,
           altDiv;
+
       this._clearAlts();
 
       this._routes = routes;
@@ -920,14 +918,13 @@ if (typeof module !== undefined) module.exports = polyline;
     },
 
     _createAlternative: function(alt, i) {
-
       var altDiv = L.DomUtil.create('div', 'leaflet-routing-alt ' +
         this.options.alternativeClassName +
         (i > 0 ? ' leaflet-routing-alt-minimized ' + this.options.minimizedClassName : '')),
         template = this.options.summaryTemplate,
         data = L.extend({
           name: alt.name,
-          distance: this._getReadableDistance(alt.summary.totalDistance, alt.unit),
+          distance: this._formatter.formatDistance(alt.summary.totalDistance),
           time: this._formatter.formatTime(alt.summary.totalTime)
         }, alt);
       altDiv.innerHTML = typeof(template) === 'function' ? template(data) : L.Util.template(template, data);
@@ -958,35 +955,18 @@ if (typeof module !== undefined) module.exports = polyline;
           icon;
 
       container.appendChild(steps);
+
       for (i = 0; i < r.instructions.length; i++) {
         instr = r.instructions[i];
-        text = instr["instruction"];
-        distance = this._getReadableDistance(instr["length"], r.unit);
+        text = this._formatter.formatInstruction(instr, i);
+        distance = this._formatter.formatDistance(instr.distance);
         icon = this._formatter.getIconName(instr, i);
         step = this._itineraryBuilder.createStep(text, distance, icon, steps);
-        this._addRowListeners(step, r.coordinates[instr.begin_shape_index]);
+
+        this._addRowListeners(step, r.coordinates[instr.index]);
       }
+
       return container;
-    },
-    _getReadableDistance:function(len,unit){
-      var wUnit = unit
-      if(unit === "kilometers"||unit ===  "km"){
-
-        wUnit = " km"
-        if(len < 1){
-          len = len * 1000;
-          wUnit = " m";
-        }else{
-          //rouding
-          len = Math.floor(len *100)/100;
-        }
-      }
-      if(unit === "miles" ||unit ===  "mi"){
-        wUnit = " mi"
-        len = Math.floor(len *100)/100;
-      }
-
-      return len + wUnit;
     },
 
     _addRowListeners: function(row, coordinate) {
@@ -1087,9 +1067,12 @@ if (typeof module !== undefined) module.exports = polyline;
       var row = L.DomUtil.create('tr', '', steps),
         span,
         td;
-      td = L.DomUtil.create('td', 'guide', row);
+      td = L.DomUtil.create('td', '', row);
+      span = L.DomUtil.create('span', 'leaflet-routing-icon leaflet-routing-icon-'+icon, td);
+      td.appendChild(span);
+      td = L.DomUtil.create('td', '', row);
       td.appendChild(document.createTextNode(text));
-      td = L.DomUtil.create('td', 'measure', row);
+      td = L.DomUtil.create('td', '', row);
       td.appendChild(document.createTextNode(distance));
       return row;
     }
@@ -1113,9 +1096,9 @@ if (typeof module !== undefined) module.exports = polyline;
 
     options: {
       styles: [
-        {color: 'black', opacity: 0.0, weight: 0},
-        {color: '#263A42', opacity: 0.8, weight:6},
-        {color: '#25A5FA', opacity: 0.86400, weight: 6}
+        {color: 'black', opacity: 0.15, weight: 9},
+        {color: 'white', opacity: 0.8, weight: 6},
+        {color: 'red', opacity: 1, weight: 2}
       ],
       missingRouteStyles: [
         {color: 'black', opacity: 0.15, weight: 7},

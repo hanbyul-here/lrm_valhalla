@@ -24,7 +24,7 @@ var destLng = hashes[4];
 
 var rr = L.Routing.control({
   routeWhileDragging: false,
-  router: L.Routing.valhalla('valhalla-Mc6zgDA','auto'),
+  router: L.Routing.valhalla('valhalla-nsDITYA','auto'),
   summaryTemplate:'<div class="start">{name}</div><div class="info {transitmode}">{distance}, {time}</div>',
   createMarker: function(i,wp,n){
     var iconV;

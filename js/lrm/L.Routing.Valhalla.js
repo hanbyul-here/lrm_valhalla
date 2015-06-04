@@ -239,8 +239,8 @@ if (typeof module !== undefined) module.exports = polyline;
         wp = waypoints[i];
         wps.push({
           latLng: wp.latLng,
-          name: wp.name,
-          options: wp.options
+          name: wp.name || "",
+          options: wp.options || {}
         });
       }
 
@@ -278,11 +278,31 @@ if (typeof module !== undefined) module.exports = polyline;
         });
         return;
       }
+//if valhalla changes to array of objects
+
       var insts = [];
-      for(var i = 0; i<response.trip.legs[0].maneuvers.length; i++){
-        insts.push(response.trip.legs[0].maneuvers[i]);
+      var coordinates = [];
+      var shapeIndex =  0;
+      for(var i = 0; i<response.trip.legs.length;  i++){
+        var coord = polyline.decode(response.trip.legs[i].shape, 6);
+
+        for(var k = 0; k < coord.length; k++){
+          coordinates.push(coord[k]);
+        }
+
+        for(var j =0; j < response.trip.legs[i].maneuvers.length; j++){
+          var res = response.trip.legs[i].maneuvers[j];
+          res.distance = response.trip.legs[i].maneuvers[j]["length"];
+          res.index = shapeIndex + response.trip.legs[i].maneuvers[j]["begin_shape_index"];
+          insts.push(res);
+        }
+
+        shapeIndex += response.trip.legs[i].maneuvers[response.trip.legs[i].maneuvers.length-1]["begin_shape_index"];
+        console.log(shapeIndex);
       }
-      coordinates = polyline.decode(response.trip.legs[0].shape, 6);
+      //coordinates = polyline.decode(response.trip.legs[0].shape, 6);
+      //console.log(coordinates);
+
       actualWaypoints = this._toWaypoints(inputWaypoints, response.trip.locations);
       alts = [{
         ////gotta change
@@ -343,8 +363,8 @@ if (typeof module !== undefined) module.exports = polyline;
           i;
       for (i = 0; i < vias.length; i++) {
         wps.push(L.Routing.waypoint(L.latLng([vias[i]["lat"],vias[i]["lon"]]),
-                                    inputWaypoints[i].name,
-                                    inputWaypoints[i].options));
+                                    "",
+                                    {}));
       }
 
       return wps;

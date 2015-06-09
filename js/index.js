@@ -3,7 +3,6 @@ var map = L.map('map',{
   inertia: false
 });
 
-
 var layer = Tangram.leafletLayer({
   scene: 'resource/scene.yaml',
         attribution: '<a href="https://mapzen.com/tangram" target="_blank">Tangram</a> | &copy; OSM contributors | <a href="https://mapzen.com/" target="_blank">Mapzen</a>'
@@ -45,8 +44,9 @@ var rr = L.Routing.control({
         }
         return L.marker(wp.latLng,options);
       },
-      formatter: new L.Routing.Valhalla.Formatter(),
-      pointMarkerStyle: {radius: 6,color: '#25A5FA',fillColor: '#FFDA8A',opacity: 1,fillOpacity: 1}}).addTo(map);
+  formatter: new L.Routing.Valhalla.Formatter(),
+  pointMarkerStyle: {radius: 6,color: '#25A5FA',fillColor: '#FFDA8A',opacity: 1,fillOpacity: 1}
+}).addTo(map);
 
 
 if(!hashTransitMode){

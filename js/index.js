@@ -49,8 +49,6 @@ var rr = L.Routing.control({
       pointMarkerStyle: {radius: 6,color: '#25A5FA',fillColor: '#FFDA8A',opacity: 1,fillOpacity: 1}}).addTo(map);
 
 
-
-
 if(!hashTransitMode){
 
   hashTransitMode = 'auto';
@@ -91,9 +89,6 @@ var routingContainer = document.getElementsByClassName('leaflet-routing-containe
 
 document.body.appendChild(mobileRouteEL);
 
-
-
-
 driveBtn.addEventListener('click', function (e) {
   hashTransitMode = 'auto';
   rr.route({transitmode: hashTransitMode});
@@ -121,9 +116,3 @@ relocateBtn.addEventListener('click', function (e) {
   rr.route();
 
 });
-
-
-function changeURL(transitM,startLat,startLng,destLat,destLng){
-
-  window.history.replaceState({}, "Title", '/#' + transitM + '/' + startLat + '/' + startLng + '/' + destLat + '/' + destLng);
-}

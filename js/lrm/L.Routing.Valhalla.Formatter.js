@@ -122,11 +122,7 @@
     },
 
     _getInstructionTemplate: function(instr, i) {
-      //var type = instr.type === 'Straight' ? (i === 0 ? 'Head' : 'Continue') : instr.type,
-      //strings = L.Routing.Localization[this.options.language].instructions[type];
-      //return instr;
       return instr.instruction + " " +instr.length;
-      //return strings[0] + (strings.length > 1 && instr.road ? strings[1] : '');
     }
   });
 

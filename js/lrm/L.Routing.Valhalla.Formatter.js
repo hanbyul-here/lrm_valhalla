@@ -48,7 +48,7 @@
       } else {
         v = d;
         data = {
-          value: v,
+          value: v >= 1 ? v: v*1000,
           unit: v >= 1 ? un.kilometers : un.meters
         };
       }
